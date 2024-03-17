@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:2015"],
+    origin: ["https://realtimechatapp-qjt9.onrender.com"],
     methods: ["GET", "POST"],
   },
 });
