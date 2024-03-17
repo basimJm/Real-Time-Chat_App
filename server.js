@@ -6,7 +6,6 @@ const authRoute = require("./route/authRoute");
 const messageRoute = require("./route/messageRoute");
 const usersRoute = require("./route/usersRoute");
 const ApiError = require("./utils/apiError");
-const path = require("path");
 const globalError = require("./meddilware/errorMiddleware");
 const { app, server } = require("./socket/socket");
 
