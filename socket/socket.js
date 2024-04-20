@@ -23,7 +23,11 @@ io.on("connection", (socket) => {
   console.log("user login");
   socket.on("message", (message) => {
     console.log(message);
-    io.emit("message", message);
+    io.emit("message", {
+      message: message.text,
+      senderId: message.senderId,
+      receiverId: message.receiverId,
+    });
   });
 
   socket.on("disconnect", () => {
