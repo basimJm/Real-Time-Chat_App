@@ -2,10 +2,11 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
-const serverAccount = require("C:\\Users\\ALBATOOL\\Downloads\\chatapp\\chat-app-socketio-71eba-firebase-adminsdk-lwlg4-c656e8b6c1.json");
+$env: GOOGLE_APPLICATION_CREDENTIALS =
+  "C:UsersALBATOOLDownloadschatappchat-app-socketio-71eba-firebase-adminsdk-lwlg4-c656e8b6c1.json";
 
 admin.initializeApp({
-  credential: admin.credential.cert(serverAccount),
+  credential: admin.credential.applicationDefault(),
 });
 
 const userToken =
