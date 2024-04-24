@@ -8,7 +8,8 @@ const server = http.createServer(app);
 
 const admin = require("firebase-admin");
 
-const serverAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const serverAccount =
+  "chat-app-socketio-71eba-firebase-adminsdk-lwlg4-c656e8b6c1.json";
 
 admin.initializeApp({
   credential: admin.credential.cert(serverAccount),
