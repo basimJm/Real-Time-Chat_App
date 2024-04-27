@@ -1,15 +1,19 @@
 const mongoose = require("mongoose");
 
 const conversationSchema = new mongoose.Schema({
-  participants: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  users: {
+    type: Array,
+    default: [],
+  },
   messages: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Message", default: [] },
   ],
+  lastSenderName: {
+    type: String,
+  },
+  lastMessage: {
+    type: String,
+  },
 });
 
 const conversationModel = mongoose.model("Conversation", conversationSchema);

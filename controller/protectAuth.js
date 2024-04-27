@@ -1,6 +1,7 @@
 const userModel = require("../model/userModel");
 const ApiError = require("../utils/apiError");
 const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 
 // @desc   make sure the user is logged in
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -20,7 +21,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  const userId = req.params.userID;
 
   // 2) Verify token (no change happens, expired token)
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -34,6 +34,10 @@ exports.protect = asyncHandler(async (req, res, next) => {
         401
       )
     );
+  }
+
+  if (token.toString() !== currentUser.authToken.toString()) {
+    return next(new ApiError("this user logged from another device ", 401));
   }
 
   // 4) Check if user change his password after token created
@@ -51,11 +55,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
         )
       );
     }
-  }
-
-  // 5)check if this token for this userID
-  if (userId.toString() !== currentUser._id.toString()) {
-    return next(new ApiError("Invalid Token For User", 401));
   }
 
   req.user = currentUser;

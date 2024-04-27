@@ -19,7 +19,10 @@ const userSchema = new mongoose.Schema({
   },
   fcmToken: {
     type: String,
-    unique: true,
+  },
+  authToken: {
+    type: String,
+    default: "empty",
   },
 });
 
