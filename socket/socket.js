@@ -13,6 +13,7 @@ const serverAccount =
 
 admin.initializeApp({
   credential: admin.credential.cert(serverAccount),
+  storageBucket: "gs://chat-app-socketio-71eba.appspot.com",
 });
 
 const userToken =
