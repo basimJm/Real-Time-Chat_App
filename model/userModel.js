@@ -19,11 +19,19 @@ const userSchema = new mongoose.Schema({
   },
   fcmToken: {
     type: String,
+    default: "",
   },
   authToken: {
     type: String,
     default: "empty",
   },
+  conversations: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Conversation",
+      default: [],
+    },
+  ],
   imageUrl: {
     type: String,
     default:

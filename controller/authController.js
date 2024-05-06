@@ -14,6 +14,7 @@ const {
   getDownloadURL,
   uploadBytesResumable,
 } = require("firebase/storage");
+const userModel = require("../model/userModel");
 
 initializeApp(firebaseConfig);
 const storage = getStorage();
@@ -103,3 +104,13 @@ const giveCurrentDateTime = () => {
   const dateTime = date + " " + time;
   return dateTime;
 };
+
+exports.isUserAuthrized = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const isUserExisit = await user.findById({ _id: userId });
+  if (!isUserExisit) {
+    next(new ApiError("user not authrized", 401));
+  }
+  res.status(200).json({ success: true, statusCode: 200 });
+});

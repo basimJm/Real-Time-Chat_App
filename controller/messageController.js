@@ -2,28 +2,30 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const messageModel = require("../model/messagesModel");
 const conversationModel = require("../model/conversationModel");
+const userModel = require("../model/userModel");
 
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { receiverId } = req.params;
   const myId = req.user._id;
   const { message, senderName, receiverName } = req.body;
 
+  const usersIds = [myId.toString(), receiverId];
+  const sortUsersIds = usersIds.sort();
+
   let conversation = await conversationModel.findOneAndUpdate(
     {
-      users: [myId.toString(), receiverId],
+      users: sortUsersIds,
     },
     { lastSenderName: senderName, lastMessage: message },
     { new: true }
   );
 
-  const usersIds = [myId.toString(), receiverId];
-  const sortUsersIds = usersIds.sort();
-
   if (!conversation) {
     conversation = await conversationModel.create({
       users: sortUsersIds,
+      lastSenderName: senderName,
+      lastMessage: message,
     });
-    // return next(new ApiError("Couldn't create conversation", 503));
   }
 
   const messageContent = {
@@ -38,7 +40,22 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
   conversation.messages.push(newMessage._id);
 
+  // sortUsersIds.map(async (user) => {
+  //   conversation.users.push(user);
+  // });
+
+  users = await userModel.find({
+    _id: { $in: [myId.toString(), receiverId] },
+  });
+
   await Promise.all([conversation.save(), newMessage.save()]);
+
+  users.map(async (user) => {
+    if (!user.conversations.includes(conversation._id)) {
+      user.conversations.push(conversation._id);
+      await user.save();
+    }
+  });
 
   res.status(201).json({ status: 201, message: newMessage });
 });
@@ -70,7 +87,8 @@ exports.getConversationBetweenTowUsers = asyncHandler(
       .findOne({
         users: sortUsersIds,
       })
-      .populate("messages");
+      .populate("messages")
+      .populate("users");
 
     if (!conversation) {
       return next(new ApiError("no conversation between this tow users", 404));
