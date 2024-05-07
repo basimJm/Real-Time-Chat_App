@@ -40,10 +40,6 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
   conversation.messages.push(newMessage._id);
 
-  // sortUsersIds.map(async (user) => {
-  //   conversation.users.push(user);
-  // });
-
   users = await userModel.find({
     _id: { $in: [myId.toString(), receiverId] },
   });
@@ -66,7 +62,7 @@ exports.getAllConversationsForUser = asyncHandler(async (req, res, next) => {
     .find({
       users: { $in: [myId.toString()] },
     })
-    .populate("messages");
+    .populate("users");
 
   if (!conversation) {
     return next(new ApiError("no conversation for this user", 404));
