@@ -112,5 +112,5 @@ exports.isUserAuthrized = asyncHandler(async (req, res, next) => {
   if (!isUserExisit) {
     next(new ApiError("user not authrized", 401));
   }
-  res.status(200).json({ success: true, statusCode: 200 });
+  res.status(200).json({ data: { success: true, statusCode: 200 } });
 });
